@@ -1,0 +1,15 @@
+name: "Yay internet!"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "plotly"
+      href: plotly.html
+    - text: "dashboard"
+      href: nycrestaurant_dashboard.html
+    - icon: fa-envelope fa-lg
+      href: mailto:ht2448@columbia.edu
+    - icon: fa-github fa-lg
+      href: http://github.com/HuilanClaireTang/
+output:
+  html_document

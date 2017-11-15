@@ -1,0 +1,72 @@
+---
+title: "NYC Restaurant dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+```
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(stringr)
+library(forcats)
+library(viridis)
+
+library(plotly)
+```
+
+```{r}
+nyc_inspections = read_csv("./DOHMH_New_York_City_Restaurant_Inspection_Results.csv.gz", 
+                           col_types = cols(building = col_character()),
+                           na = c("NA", "N/A")) %>% 
+  filter(grade %in% c("A", "B", "C")) %>% 
+  mutate(inspection_num = row_number(),   
+         boro = str_to_title(boro)) %>% 
+  select(inspection_num, boro, grade, score, critical_flag, dba, cuisine_description, zipcode, violation_description)
+```
+
+
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Scatterplot
+
+```{r}
+scatter_ggplot = nyc_inspections %>%
+  ggplot(aes(x = zipcode, y = score, color = zipcode)) +
+  geom_point(alpha = 0.25) +
+  scale_color_viridis() +
+  coord_cartesian() + labs(title = "Scatterplot of Restaurant Score for Zipcodes", x = "Zipcodes", y = "Restaurant Score") +
+  theme_classic()
+ggplotly(scatter_ggplot)
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### boxplot
+
+```{r}
+box_ggplot =
+nyc_inspections %>% 
+   mutate(boro = fct_reorder(boro, score)) %>%
+ggplot(aes(x = boro, y = score, group = boro)) + geom_boxplot(aes(color = boro)) + labs(title = "Boxplot of the restaurant score for each Borough in NYC", x = "Borough", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
+ggplotly(box_ggplot)
+```
+
+### Bar chart
+
+```{r}
+nyc_inspections %>% 
+  count(cuisine_description) %>% 
+  mutate(cuisine_description = fct_reorder(cuisine_description, n)) %>% 
+  top_n(20) %>%
+  plot_ly(x = ~cuisine_description, y = ~n, color = ~cuisine_description, type = "bar", colors = "Set2")
+```
+
