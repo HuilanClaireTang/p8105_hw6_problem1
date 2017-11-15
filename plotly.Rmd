@@ -51,8 +51,8 @@ ggplotly(scatter_ggplot)
 ```{r}
 box_ggplot =
 nyc_inspections %>% 
-   mutate(boro = fct_reorder(boro, score)) %>%
-ggplot(aes(x = boro, y = score, group = boro)) + geom_boxplot(aes(color = boro)) + labs(title = "Boxplot of the restaurant score for each Borough in NYC", x = "Borough", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
+   mutate(cuisine_description = fct_reorder(cuisine_description, score)) %>%
+ggplot(aes(x = cuisine_description, y = score, group = cuisine_description)) + geom_boxplot(aes(color = cuisine_description)) + labs(title = "Boxplot of the restaurant score for different cusine type in NYC", x = "cuisine type", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
 ggplotly(box_ggplot)
 ```
 
