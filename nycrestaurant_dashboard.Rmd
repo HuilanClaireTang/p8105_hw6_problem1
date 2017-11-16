@@ -1,5 +1,5 @@
 ---
-title: "NYC Restaurant Dashboard"
+title: "NYC_Restaurant Dashboard *Note:20k samples were randomly taken"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -20,6 +20,8 @@ library(viridis)
 library(plotly)
 ```
 
+
+
 ```{r}
 nyc_inspections = read_csv("./DOHMH_New_York_City_Restaurant_Inspection_Results.csv.gz", 
                            col_types = cols(building = col_character()),
@@ -28,9 +30,11 @@ nyc_inspections = read_csv("./DOHMH_New_York_City_Restaurant_Inspection_Results.
   mutate(inspection_num = row_number(),   
          boro = str_to_title(boro)) %>% 
   select(inspection_num, boro, grade, score, critical_flag, dba, cuisine_description, zipcode, violation_description)
+
+# take 20k random sample
+set.seed(123)
+nyc_subdata = nyc_inspections[sample(nrow(nyc_inspections), 20000), ]
 ```
-
-
 
 Column {data-width=650}
 -----------------------------------------------------------------------
@@ -38,7 +42,7 @@ Column {data-width=650}
 ### Scatterplot
 
 ```{r}
-scatter_ggplot = nyc_inspections %>%
+scatter_ggplot = nyc_subdata %>%
   ggplot(aes(x = zipcode, y = score, color = zipcode)) +
   geom_point(alpha = 0.25) +
   scale_color_viridis() +
@@ -54,7 +58,7 @@ Column {data-width=350}
 
 ```{r}
 box_ggplot =
-nyc_inspections %>% 
+nyc_subdata %>% 
    mutate(cuisine_description = fct_reorder(cuisine_description, score)) %>%
 ggplot(aes(x = cuisine_description, y = score, group = cuisine_description)) + geom_boxplot(aes(color = cuisine_description)) + labs(title = "Boxplot of the restaurant score for different cusine type in NYC", x = "cuisine type", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
 ggplotly(box_ggplot)
@@ -63,7 +67,7 @@ ggplotly(box_ggplot)
 ### Bar chart
 
 ```{r}
-nyc_inspections %>% 
+nyc_subdata %>% 
   count(cuisine_description) %>% 
   mutate(cuisine_description = fct_reorder(cuisine_description, n)) %>% 
   top_n(20) %>%
