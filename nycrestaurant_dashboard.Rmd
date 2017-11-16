@@ -1,5 +1,5 @@
 ---
-title: "NYC Restaurant dashboard"
+title: "NYC Restaurant Dashboard"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns

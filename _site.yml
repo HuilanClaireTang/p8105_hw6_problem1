@@ -1,15 +1,17 @@
-name: "Yay internet!"
+name: "P8105_Homework6"
 output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "plotly"
-      href: plotly.html
-    - text: "dashboard"
+    - text: "Flexdashboard"
       href: nycrestaurant_dashboard.html
-    - icon: fa-envelope fa-lg
-      href: mailto:ht2448@columbia.edu
+    - text: "Shiny Dashboard"
+      href: https://candace-haghighi.shinyapps.io/nyc_shiny/
+    - text: "Problem 1 repository"
+      href: https://github.com/candacehaghighi/p8105_hw6_problem1
+    - text: "Problem 2 repository"
+      href: https://github.com/HuilanClaireTang/p8105_shinyhw6_problem2
     - icon: fa-github fa-lg
-      href: http://github.com/HuilanClaireTang/
+      href: https://github.com/
 output:
   html_document

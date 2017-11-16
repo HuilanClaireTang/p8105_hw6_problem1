@@ -1,7 +1,20 @@
----
-title: "Holy cow!"
----
+<br>
+<br>
+  
+![](http://www1.nyc.gov/assets/doh/images/content/header/logo.png) 
+  
+# **NYC Restaurant Inspections | DSI | Assignment 6**
+### `Huilan Tang | Candace Haghighi`
 
-### I have a webpage!
+***
 
-And I can put all kinds of stuff on it!
+> Introduction Placeholder
+
+***
+
+#### Relevant Links:  [Shiny Dashboard](https://candace-haghighi.shinyapps.io/nyc_shiny/) | [Mailman](https://www.mailman.columbia.edu/) | [Email](mailto:cbh2134@cumc.columbia.edu)
+
+***
+
+<br>
+<br>
