@@ -36,7 +36,7 @@ set.seed(123)
 nyc_subdata = nyc_inspections[sample(nrow(nyc_inspections), 20000), ]
 ```
 
-Column {data-width=650}
+Column {data-width=300}
 -----------------------------------------------------------------------
 
 ### Scatterplot
@@ -46,12 +46,12 @@ scatter_ggplot = nyc_subdata %>%
   ggplot(aes(x = zipcode, y = score, color = zipcode)) +
   geom_point(alpha = 0.25) +
   scale_color_viridis() +
-  coord_cartesian() + labs(title = "Scatterplot of Restaurant Score for Zipcodes", x = "Zipcodes", y = "Restaurant Score") +
+  coord_cartesian() + labs(title = "Restaurant Score for Zipcodes", x = "Zipcodes", y = "Restaurant Score") +
   theme_classic()
 ggplotly(scatter_ggplot)
 ```
 
-Column {data-width=350}
+Column {data-width=700}
 -----------------------------------------------------------------------
 
 ### boxplot
@@ -59,18 +59,19 @@ Column {data-width=350}
 ```{r}
 box_ggplot =
 nyc_subdata %>% 
+  filter(cuisine_description %in% c("American", "Chinese","Italian","Pizza","Mexican")) %>% 
    mutate(cuisine_description = fct_reorder(cuisine_description, score)) %>%
-ggplot(aes(x = cuisine_description, y = score, group = cuisine_description)) + geom_boxplot(aes(color = cuisine_description)) + labs(title = "Boxplot of the restaurant score for different cusine type in NYC", x = "cuisine type", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
+ggplot(aes(x = cuisine_description, y = score, group = cuisine_description)) + geom_boxplot(aes(color = cuisine_description)) + labs(title = "Boxplot of the restaurant score for Five Selected Cusine types in NYC", x = "cuisine type", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
 ggplotly(box_ggplot)
 ```
 
-### Bar chart
+### Bar chart for Most 5 common Cuisines in NYC
 
 ```{r}
 nyc_subdata %>% 
   count(cuisine_description) %>% 
   mutate(cuisine_description = fct_reorder(cuisine_description, n)) %>% 
-  top_n(20) %>%
+  top_n(5) %>%
   plot_ly(x = ~cuisine_description, y = ~n, color = ~cuisine_description, type = "bar", colors = "Set2")
 ```
 
