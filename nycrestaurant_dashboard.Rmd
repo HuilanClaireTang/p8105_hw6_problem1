@@ -1,5 +1,5 @@
 ---
-title: "NYC_Restaurant Dashboard *Note:20k samples were randomly taken"
+title: "NYC_Restaurant Dashboard: Random sample selected for analysis"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -31,7 +31,7 @@ nyc_inspections = read_csv("./DOHMH_New_York_City_Restaurant_Inspection_Results.
          boro = str_to_title(boro)) %>% 
   select(inspection_num, boro, grade, score, critical_flag, dba, cuisine_description, zipcode, violation_description)
 
-# take 20k random sample
+# take 20k random sample; selected 20k because this gives about ~10% of the sample and is relatively quick to load
 set.seed(123)
 nyc_subdata = nyc_inspections[sample(nrow(nyc_inspections), 20000), ]
 ```
@@ -39,14 +39,14 @@ nyc_subdata = nyc_inspections[sample(nrow(nyc_inspections), 20000), ]
 Column {data-width=300}
 -----------------------------------------------------------------------
 
-### Scatterplot
+### Scatterplot: Restaurant Inspection Score by Zipcode
 
 ```{r}
 scatter_ggplot = nyc_subdata %>%
   ggplot(aes(x = zipcode, y = score, color = zipcode)) +
   geom_point(alpha = 0.25) +
   scale_color_viridis() +
-  coord_cartesian() + labs(title = "Restaurant Score for Zipcodes", x = "Zipcodes", y = "Restaurant Score") +
+  coord_cartesian() + labs(title = "Restaurant Score by Zipcode", x = "Zipcode", y = "Restaurant Score") +
   theme_classic()
 ggplotly(scatter_ggplot)
 ```
@@ -54,24 +54,29 @@ ggplotly(scatter_ggplot)
 Column {data-width=700}
 -----------------------------------------------------------------------
 
-### boxplot
+### Boxplot of the Restaurant's Inspection Score for the top five most popular cuisines in NYC
 
 ```{r}
 box_ggplot =
 nyc_subdata %>% 
   filter(cuisine_description %in% c("American", "Chinese","Italian","Pizza","Mexican")) %>% 
    mutate(cuisine_description = fct_reorder(cuisine_description, score)) %>%
-ggplot(aes(x = cuisine_description, y = score, group = cuisine_description)) + geom_boxplot(aes(color = cuisine_description)) + labs(title = "Boxplot of the restaurant score for Five Selected Cusine types in NYC", x = "cuisine type", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
+ggplot(aes(x = cuisine_description, y = score, group = cuisine_description)) + geom_boxplot(aes(color = cuisine_description)) + labs(title = "Distribution of restaurant score in the most popular cuisines in NYC", x = "Cuisine Type", y = "Restuarant Score") + theme_classic() + theme(axis.text.x = element_text(hjust = 1), plot.title = element_text(hjust = 0.5))
 ggplotly(box_ggplot)
 ```
 
-### Bar chart for Most 5 common Cuisines in NYC
+### Five Most Common Cuisines in NYC (Bar Chart)
 
 ```{r}
 nyc_subdata %>% 
   count(cuisine_description) %>% 
   mutate(cuisine_description = fct_reorder(cuisine_description, n)) %>% 
   top_n(5) %>%
-  plot_ly(x = ~cuisine_description, y = ~n, color = ~cuisine_description, type = "bar", colors = "Set2")
+  plot_ly(x = ~cuisine_description, y = ~n, color = ~cuisine_description, type = "bar", colors = "Set2") %>%
+   layout(legend = list(x = 100, y = 0.5)) %>%
+    layout(
+    title = "Most Common Cuisines in NYC") %>%
+    layout(yaxis = list(title = 'Total number of restauraunts')) %>%
+    layout(xaxis = list(title = 'Cusine Type'))
 ```
 
